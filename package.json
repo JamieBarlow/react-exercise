@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "npx playwright test",
-    "test:debug": "npx playwright test .src/tests --project='chromium' --workers 1 --headed --debug"
+    "test:debug": "npx playwright test .src/tests --project=chromium --workers 1 --headed --debug"
   },
   "dependencies": {
     "@cruk/cruk-react-components": "^5.0.5",
