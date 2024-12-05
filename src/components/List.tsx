@@ -21,7 +21,7 @@ export function List() {
   const { data } = useQuery<NasaResponse>(
     ["nasaSearch", values],
     () => fetch(urlNasaSearchUrl).then((res) => res.json()),
-    { enabled: !!urlNasaSearchUrl.length },
+    { enabled: !!urlNasaSearchUrl.length }
   );
 
   // TODO somehow render results

@@ -2,19 +2,34 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Box, Button, TextField } from "@cruk/cruk-react-components";
+import { Box, Button, TextField, Select } from "@cruk/cruk-react-components";
 import { Dispatch, SetStateAction } from "react";
 import { NasaSearchParams } from "../types";
 
 export const formSchema = z.object({
-  // TODO: update validation schema here
-  demoField: z.string(),
+  keywords: z
+    .string()
+    .min(2, { message: "keywords must have at least 2 characters." })
+    .max(50, { message: "keywords must have at most 50 characters." }),
+  mediaType: z.enum(["audio", "video", "image"], {
+    required_error: "Please select a media type.",
+  }),
+  yearStart: z.coerce
+    .number({ invalid_type_error: "Please enter a valid number." })
+    .int({ message: "Please enter a valid number." })
+    .gte(1900, { message: "Year start must be after 1900." })
+    .lte(new Date().getFullYear(), {
+      message: "Year start must not be in the future.",
+    })
+    .optional(),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
 
 export const initialData = {
-  demoField: "",
+  keywords: "",
+  mediaType: "",
+  yearStart: "",
 } as unknown as FormValues;
 
 export function Form({
@@ -39,7 +54,7 @@ export function Form({
 
   const onSubmit: SubmitHandler<FormValues> = async (
     data,
-    e,
+    e
   ): Promise<void> => {
     console.log({ data });
     // TODO do something on sumbit
@@ -51,10 +66,29 @@ export function Form({
         {/* TODO update form elements */}
         <Box marginBottom="m">
           <TextField
-            {...register("demoField")}
-            errorMessage={errors.demoField?.message}
-            label="Demo Field"
+            {...register("keywords")}
+            errorMessage={errors.keywords?.message}
+            label="Keywords"
             required
+          />
+        </Box>
+        <Box marginBottom="m">
+          <Select
+            {...register("mediaType")}
+            errorMessage={errors.mediaType?.message}
+            label="Media Type"
+            required
+          >
+            <option value="audio">Audio</option>
+            <option value="video">Video</option>
+            <option value="image">Image</option>
+          </Select>
+        </Box>
+        <Box marginBottom="m">
+          <TextField
+            {...register("yearStart")}
+            errorMessage={errors.yearStart?.message}
+            label="Year start"
           />
         </Box>
         <Box marginBottom="m">
