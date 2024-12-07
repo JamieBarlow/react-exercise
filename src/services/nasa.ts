@@ -6,15 +6,19 @@ export const urlNasaSearch = ({
   keywords,
   mediaType,
   yearStart,
+  page = 1,
+  page_size = 10,
 }: NasaSearchParams): string => {
   const paramsObjectWithSnakeCaseKeys = {
     keywords,
     media_type: mediaType,
     ...(!!yearStart &&
       !Number.isNaN(yearStart) && { year_start: `${yearStart}` }),
+    page: `${page}`,
+    page_size: `${page_size}`,
   };
   const paramsString = new URLSearchParams(
-    paramsObjectWithSnakeCaseKeys,
+    paramsObjectWithSnakeCaseKeys
   ).toString();
   return `${NASA_API_URL}?${paramsString}`;
 };
