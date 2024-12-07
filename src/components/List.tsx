@@ -5,13 +5,7 @@ import { NasaResponse, NasaSearchParams } from "../types";
 import { urlNasaSearch } from "../services/nasa";
 import { useQuery } from "@tanstack/react-query";
 
-export function List() {
-  const values: NasaSearchParams = {
-    keywords: "moon",
-    mediaType: "audio",
-    yearStart: 2000,
-  };
-
+export function List({ values }: { values: NasaSearchParams }) {
   const urlNasaSearchUrl = values
     ? urlNasaSearch(values as NasaSearchParams)
     : "";

@@ -57,13 +57,12 @@ export function Form({
     e
   ): Promise<void> => {
     console.log({ data });
-    // TODO do something on sumbit
+    setValues(data);
   };
 
   return (
     <>
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
-        {/* TODO update form elements */}
         <Box marginBottom="m">
           <TextField
             {...register("keywords")}
