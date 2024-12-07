@@ -12,7 +12,7 @@ export const formSchema = z.object({
     .min(2, { message: "keywords must have at least 2 characters." })
     .max(50, { message: "keywords must have at most 50 characters." }),
   mediaType: z.enum(["audio", "video", "image"], {
-    required_error: "Please select a media type.",
+    message: "Please select a media type.",
   }),
   yearStart: z.coerce
     .number({ invalid_type_error: "Please enter a valid number." })
