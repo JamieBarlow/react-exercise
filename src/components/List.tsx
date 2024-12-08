@@ -1,6 +1,6 @@
 "use client";
 
-import { Text, Box } from "@cruk/cruk-react-components";
+import { Text, Box, Pagination } from "@cruk/cruk-react-components";
 import { NasaResponse, NasaSearchParams } from "../types";
 import { nasaMediaSearch, urlNasaSearch } from "../services/nasa";
 import { useQueries, useQuery } from "@tanstack/react-query";
@@ -8,24 +8,29 @@ import { ResultDisplay } from "./ResultDisplay";
 import { useEffect, useState } from "react";
 
 export function List({ values }: { values: NasaSearchParams }) {
-  const urlNasaSearchUrl = values ? urlNasaSearch(values) : "";
-
   const [nasaIds, setNasaIds] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const initialSearchUrl = urlNasaSearch({ ...values, page: currentPage });
+  const [urlNasaSearchUrl, setUrlNasaSearchUrl] = useState(initialSearchUrl);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setUrlNasaSearchUrl(urlNasaSearch({ ...values, page }));
+  };
 
   const { data, isLoading, isError, error } = useQuery<NasaResponse>(
-    ["nasaSearch", values],
+    ["nasaSearch", values, currentPage],
     () => fetch(urlNasaSearchUrl).then((res) => res.json()),
     { enabled: !!urlNasaSearchUrl.length }
   );
-
-  console.log("API RESPONSE:");
-  console.log(data);
 
   useEffect(() => {
     if (data) {
       const newIds = data.collection.items.flatMap((item) =>
         item.data.map((dataItem) => dataItem.nasa_id)
       );
+      console.log(`New NASA Ids: ${newIds}`);
       setNasaIds((prevIds) => [...prevIds, ...newIds]);
     }
   }, [data]);
@@ -34,6 +39,7 @@ export function List({ values }: { values: NasaSearchParams }) {
     queries: nasaIds.map((id) => ({
       queryKey: ["mediaItem", id],
       queryFn: () => fetch(`${nasaMediaSearch(id)}`).then((res) => res.json()),
+      enabled: !!(nasaIds.length > 0),
     })),
   });
 
@@ -44,8 +50,6 @@ export function List({ values }: { values: NasaSearchParams }) {
       console.log(`Invalid structure for item ${index}, skipping...`);
     }
   });
-
-  console.log("MEDIA QUERIES:", mediaUrls);
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -69,6 +73,12 @@ export function List({ values }: { values: NasaSearchParams }) {
           mediaType={values.mediaType}
         />
       ))}
+      <Pagination
+        current={currentPage}
+        perPage={10}
+        items={100}
+        pagerCallback={handlePageChange}
+      />
     </Box>
   );
 }
