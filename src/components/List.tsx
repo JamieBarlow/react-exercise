@@ -18,6 +18,9 @@ export function List({ values }: { values: NasaSearchParams }) {
     { enabled: !!urlNasaSearchUrl.length }
   );
 
+  console.log("API RESPONSE:");
+  console.log(data);
+
   useEffect(() => {
     if (data) {
       const newIds = data.collection.items.flatMap((item) =>
@@ -63,6 +66,7 @@ export function List({ values }: { values: NasaSearchParams }) {
           item={item}
           index={index}
           media={mediaUrls[index]}
+          mediaType={values.mediaType}
         />
       ))}
     </Box>
