@@ -4,9 +4,11 @@ import { ItemsType } from "../types";
 export function ResultDisplay({
   item,
   index,
+  media,
 }: {
   item: ItemsType;
   index: number;
+  media: string;
 }) {
   const backgroundColors = ["primary", "secondary", "tertiary"];
   console.log("Index value:", index);
@@ -24,6 +26,7 @@ export function ResultDisplay({
             <Text textColor="textOnPrimary">{dataItem.nasa_id}</Text>
             <Text textColor="textOnPrimary">{dataItem.description}</Text>
             <Text textColor="textOnPrimary">{dataItem.date_created}</Text>
+            <img src={media} />
           </Box>
         );
       })}

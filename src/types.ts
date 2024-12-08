@@ -36,3 +36,15 @@ export type LinkType = {
   rel: string;
   render: string;
 };
+
+export type NasaMediaResponse = {
+  collection: {
+    version: string;
+    href: string;
+    items: MediaType[];
+  };
+};
+
+export type MediaType = {
+  href: string;
+};

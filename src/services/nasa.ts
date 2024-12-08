@@ -22,3 +22,10 @@ export const urlNasaSearch = ({
   ).toString();
   return `${NASA_API_URL}?${paramsString}`;
 };
+
+export const NASA_API_MEDIA_URL = "https://images-api.nasa.gov/asset";
+
+export const nasaMediaSearch = (nasa_id: string): string => {
+  const paramsString = `${NASA_API_MEDIA_URL}/${nasa_id}`;
+  return paramsString;
+};
