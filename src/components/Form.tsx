@@ -14,14 +14,18 @@ export const formSchema = z.object({
   mediaType: z.enum(["audio", "video", "image"], {
     message: "Please select a media type.",
   }),
-  yearStart: z.coerce
-    .number({ invalid_type_error: "Please enter a valid number." })
-    .int({ message: "Please enter a valid number." })
-    .gte(1900, { message: "Year start must be after 1900." })
-    .lte(new Date().getFullYear(), {
-      message: "Year start must not be in the future.",
-    })
-    .optional(),
+  yearStart: z.union([
+    z.coerce
+      .number()
+      .int({ message: "Please enter a valid number." })
+      .gte(1900, { message: "Year start must be after 1900." })
+      .lte(new Date().getFullYear(), {
+        message: "Year start must not be in the future.",
+      }),
+    z.string().refine((value) => value === "", {
+      message: "Please enter a valid number.",
+    }),
+  ]),
 });
 
 export type FormValues = z.infer<typeof formSchema>;

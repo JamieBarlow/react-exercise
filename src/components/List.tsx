@@ -31,8 +31,11 @@ export function List({ values }: { values: NasaSearchParams }) {
       console.log(`New NASA Ids: ${newIds}`);
       setNasaIds(newIds);
     }
-    setCurrentPage(1);
   }, [data]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [values]);
 
   const mediaQueries = useQueries({
     queries: nasaIds.map((id) => ({
