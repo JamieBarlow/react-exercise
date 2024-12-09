@@ -31,7 +31,7 @@ export function List({ values }: { values: NasaSearchParams }) {
         item.data.map((dataItem) => dataItem.nasa_id)
       );
       console.log(`New NASA Ids: ${newIds}`);
-      setNasaIds((prevIds) => [...prevIds, ...newIds]);
+      setNasaIds(newIds);
     }
   }, [data]);
 
