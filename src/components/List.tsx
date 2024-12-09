@@ -11,12 +11,10 @@ export function List({ values }: { values: NasaSearchParams }) {
   const [nasaIds, setNasaIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const initialSearchUrl = urlNasaSearch({ ...values, page: currentPage });
-  const [urlNasaSearchUrl, setUrlNasaSearchUrl] = useState(initialSearchUrl);
+  const urlNasaSearchUrl = urlNasaSearch({ ...values, page: currentPage });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    setUrlNasaSearchUrl(urlNasaSearch({ ...values, page }));
   };
 
   const { data, isLoading, isError, error } = useQuery<NasaResponse>(
@@ -33,6 +31,7 @@ export function List({ values }: { values: NasaSearchParams }) {
       console.log(`New NASA Ids: ${newIds}`);
       setNasaIds(newIds);
     }
+    setCurrentPage(1);
   }, [data]);
 
   const mediaQueries = useQueries({
