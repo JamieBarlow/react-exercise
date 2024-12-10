@@ -52,7 +52,7 @@ export function Form({
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     register,
   } = formProps;
 
@@ -60,7 +60,9 @@ export function Form({
     data,
     e
   ): Promise<void> => {
-    console.log({ data });
+    if (process.env.NODE_ENV === "development") {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
     setValues(data);
   };
 
@@ -95,7 +97,9 @@ export function Form({
           />
         </Box>
         <Box marginBottom="m">
-          <Button type="submit">Submit</Button>
+          <Button disabled={isSubmitting} type="submit">
+            {isSubmitting ? "Loading..." : "Submit"}
+          </Button>
         </Box>
       </form>
     </>
