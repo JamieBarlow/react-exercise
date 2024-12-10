@@ -8,7 +8,6 @@ import { NasaSearchParams } from "../types";
 
 export const HomePage = () => {
   const [values, setValues] = useState<NasaSearchParams>();
-  console.log(values);
 
   return (
     <Box marginTop="s" paddingTop="s">

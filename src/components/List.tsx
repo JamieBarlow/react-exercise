@@ -1,6 +1,6 @@
 "use client";
 
-import { Text, Box, Pagination } from "@cruk/cruk-react-components";
+import { Text, Box, Pagination, ErrorText } from "@cruk/cruk-react-components";
 import { NasaResponse, NasaSearchParams } from "../types";
 import { nasaMediaSearch, urlNasaSearch } from "../services/nasa";
 import { useQueries, useQuery } from "@tanstack/react-query";
@@ -28,7 +28,6 @@ export function List({ values }: { values: NasaSearchParams }) {
       const newIds = data.collection.items.flatMap((item) =>
         item.data.map((dataItem) => dataItem.nasa_id)
       );
-      console.log(`New NASA Ids: ${newIds}`);
       setNasaIds(newIds);
     }
   }, [data]);
@@ -46,21 +45,36 @@ export function List({ values }: { values: NasaSearchParams }) {
   });
 
   const mediaUrls = mediaQueries.map((item, index) => {
+    if (item.isError) {
+      process.env.NODE_ENV === "development" &&
+        console.log(`Error fetching media item for ID ${nasaIds[index]}`);
+    }
     if (item.data && item.data.collection) {
       return item.data.collection.items[0].href;
     } else {
-      console.log(`Invalid structure for item ${index}, skipping...`);
+      process.env.NODE_ENV === "development" &&
+        console.log(`Invalid structure for item ${index}, skipping...`);
     }
   });
 
   if (isLoading) {
     return <Text>Loading...</Text>;
   }
+
   if (isError) {
+    let errorMessage =
+      process.env.NODE_ENV === "development"
+        ? JSON.stringify(error)
+        : "Something went wrong.";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return <ErrorText>Error: {errorMessage}</ErrorText>;
+  }
+
+  if (mediaQueries.every((query) => query.isError)) {
     return (
-      <Text>
-        Error: {error instanceof Error ? error.message : "Something went wrong"}
-      </Text>
+      <ErrorText>Error loading media items. Please try again later.</ErrorText>
     );
   }
 
