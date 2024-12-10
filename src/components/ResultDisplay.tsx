@@ -25,16 +25,16 @@ export function ResultDisplay({
     return colors[index % backgroundColors.length];
   }
 
-  function renderMedia(mediaType: string, media: string) {
+  function renderMedia(mediaType: string, media: string, title: string) {
     if (!media) {
       return <Text>Loading media...</Text>;
     }
     switch (mediaType) {
       case "image":
-        return <img src={media} alt="Nasa image" />;
+        return <img src={media} alt={title} aria-label={title} />;
       case "video":
         return (
-          <video controls width="100%">
+          <video controls width="100%" aria-label={`Video: ${title}`}>
             <source src={media} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
@@ -42,7 +42,7 @@ export function ResultDisplay({
       case "audio":
         return (
           <audio controls>
-            <source src={media} />
+            <source src={media} aria-label={`Audio: ${title}`} />
             Your browser does not support the audio element.
           </audio>
         );
@@ -84,7 +84,7 @@ export function ResultDisplay({
             {mediaType === "audio" ? null : (
               <Text textColor="textOnPrimary">{dataItem.description}</Text>
             )}
-            {renderMedia(mediaType, media)}
+            {renderMedia(mediaType, media, dataItem.title)}
             <Text textColor="textOnPrimary">{`Date created: ${readableDate}`}</Text>
           </Box>
         );
