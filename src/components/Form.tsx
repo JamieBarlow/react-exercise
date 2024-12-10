@@ -2,7 +2,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Box, Button, TextField, Select } from "@cruk/cruk-react-components";
+import {
+  Box,
+  Button,
+  TextField,
+  Select,
+  ErrorText,
+} from "@cruk/cruk-react-components";
 import { Dispatch, SetStateAction } from "react";
 import { NasaSearchParams } from "../types";
 
@@ -52,18 +58,22 @@ export function Form({
 
   const {
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
     register,
   } = formProps;
 
-  const onSubmit: SubmitHandler<FormValues> = async (
-    data,
-    e
-  ): Promise<void> => {
-    if (process.env.NODE_ENV === "development") {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+  const onSubmit: SubmitHandler<FormValues> = async (data): Promise<void> => {
+    try {
+      if (process.env.NODE_ENV === "development") {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+      setValues(data);
+    } catch (error) {
+      setError("root", {
+        message: "Form has encountered error.",
+      });
     }
-    setValues(data);
   };
 
   return (
@@ -101,6 +111,7 @@ export function Form({
             {isSubmitting ? "Loading..." : "Submit"}
           </Button>
         </Box>
+        {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
       </form>
     </>
   );
